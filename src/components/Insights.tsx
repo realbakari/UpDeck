@@ -6,7 +6,6 @@ import {
   CalendarBlank,
   DownloadSimple,
   Lightning,
-  ShieldCheck,
   UsersThree,
 } from '@phosphor-icons/react';
 import type { Snapshot, Transaction } from '../domain';
@@ -442,10 +441,6 @@ export function Insights({ data, money }: { data: Snapshot; money: Money }) {
       <WhatChanged changed={changed} money={money} />
       <TwoUp splits={splits} money={money} />
       <YearReport data={data} money={money} />
-      <p className="plain-note">
-        <ShieldCheck size={18} />
-        Worked out in your browser from your Up data. Nothing here is sent anywhere.
-      </p>
     </div>
   );
 }

@@ -51,7 +51,7 @@ export function createDemoBank(snapshot: Snapshot): (operation: Operation) => Pr
         cardPurchaseMethod:
           t.amount < 0 ? { method: 'CONTACTLESS', cardNumberSuffix: '4242' } : null,
         transactionType: t.amount < 0 ? 'Purchase' : 'Direct Credit',
-        note: i === 0 ? { text: 'A good start to the morning.' } : null,
+        note: i === 0 ? { text: 'Team coffee. Claim on expenses.' } : null,
         roundUp: t.details?.attributes.roundUp ?? null,
         performingCustomer: t.details?.attributes.performingCustomer ?? null,
         foreignAmount:

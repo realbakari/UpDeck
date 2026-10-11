@@ -231,21 +231,28 @@ export default function App() {
   const savedBalance = savers.reduce((n, a) => n + a.balance, 0);
   const pooled = accounts.filter((a) => a.type !== 'HOME_LOAN');
   const roundUps = roundUpTotal(transactions);
+  const roundUpCount = transactions.filter((t) => t.details?.attributes.roundUp).length;
   const top = summary.categories[0];
   const headings: Record<Page, [string, string]> = {
     Overview: summary.spent
       ? [
           `${viewMoney(summary.spent)} out in ${days} days.`,
           top
-            ? `${top[0]} leads the pack at ${viewMoney(top[1])}.`
+            ? `${viewMoney(top[1])} of that was ${top[0]}.`
             : 'Transfers between your own accounts don’t count as spending.',
         ]
-      : [`Nothing spent in ${days} days.`, 'Your wallet has been on holiday.'],
+      : [
+          `Nothing spent in ${days} days.`,
+          'Transfers between your own accounts don’t count as spending.',
+        ],
     Insights: ['Insights', 'Payday, subscriptions and what’s changed, worked out on this device.'],
     Transactions: ['Transactions', 'Search, filter and open anything Up has on record.'],
     Savers: ['Savers', `${viewMoney(savedBalance)} across ${plural(savers.length, 'Saver')}.`],
     Accounts: ['Accounts', 'Spending, Savers, 2Up and home loans, as Up reports them.'],
-    Receipts: ['Receipts', 'Files attached to your transactions in the Up app.'],
+    Receipts: [
+      'Receipts',
+      'Files attached to your transactions in Up. Download links are temporary and open on Up’s file host.',
+    ],
     'Categories & tags': ['Categories & tags', 'Up’s categories, plus the tags you’ve added.'],
     Connections: ['Connections', 'Check your token and manage Up webhooks.'],
     Settings: ['Settings & privacy', 'What UpDeck keeps on this device, and how to remove it.'],
@@ -668,7 +675,7 @@ export default function App() {
                           <Coins size={28} weight="duotone" />
                           <p>
                             <strong>{viewMoney(roundUps)}</strong> in Round-Ups over the last {days}{' '}
-                            days. Every coffee chipped in.
+                            days, from {plural(roundUpCount, 'purchase')}.
                           </p>
                         </div>
                       )}
@@ -701,35 +708,17 @@ export default function App() {
                   {page === 'Settings' && (
                     <section className="settings-grid">
                       <div className="panel settings-card">
-                        <div className="icon-circle green">
-                          <ShieldCheck size={25} />
-                        </div>
                         <h2>What UpDeck keeps</h2>
                         <p>
                           Your token is encrypted on this device with your passphrase. Balances and
                           transactions stay in memory, only while UpDeck is unlocked.
                         </p>
                         <ul className="privacy-list">
-                          <li>
-                            <Check />
-                            Direct connection to Up’s API
-                          </li>
-                          <li>
-                            <Check />
-                            Category, tag and webhook changes only after you confirm
-                          </li>
-                          <li>
-                            <Check />
-                            No analytics. No advertising. No UpDeck servers.
-                          </li>
-                          <li>
-                            <Check />
-                            Automatic lock after five minutes
-                          </li>
-                          <li>
-                            <Check />
-                            No access to the websites you visit
-                          </li>
+                          <li>Direct connection to Up’s API</li>
+                          <li>Category, tag and webhook changes only after you confirm</li>
+                          <li>No analytics. No advertising. No UpDeck servers.</li>
+                          <li>Automatic lock after five minutes</li>
+                          <li>No access to the websites you visit</li>
                         </ul>
                         <a
                           className="text-link"
@@ -990,7 +979,9 @@ function SaverCard({
     : hidden
       ? 'Progress hidden'
       : complete
-        ? 'Target smashed.'
+        ? account.balance > target
+          ? `${format(account.balance - target)} over target.`
+          : 'Target reached.'
         : `${percent}% there · ${format(target - account.balance)} to go`;
   return (
     <article className={`saver-card${complete && !hidden ? ' complete' : ''}`}>
@@ -1060,7 +1051,7 @@ function LockScreen({
           </span>
           UpDeck
         </span>
-        <h1>{configured ? 'Welcome back' : 'Connect Up'}</h1>
+        <h1>{configured ? 'Unlock UpDeck' : 'Connect Up'}</h1>
         <p className="lock-lede">
           {configured
             ? 'Enter your passphrase to see your money.'

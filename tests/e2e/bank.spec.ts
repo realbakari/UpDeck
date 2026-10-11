@@ -8,7 +8,7 @@ test('transaction page supports reviewed category and tag changes with real merc
   await expect(page.locator('.brand-icon').first()).toBeVisible();
   await page.getByRole('button', { name: 'View Everyday Coffee transaction', exact: true }).click();
   const receipt = page.locator('.transaction-page');
-  await expect(receipt.getByText('A good start to the morning.', { exact: true })).toBeVisible();
+  await expect(receipt.getByText('Team coffee. Claim on expenses.', { exact: true })).toBeVisible();
   await expect(receipt.getByText('Round-Up', { exact: true })).toBeVisible();
   await receipt.getByLabel('Category', { exact: true }).selectOption({ label: 'Groceries' });
   await receipt.getByRole('button', { name: 'Review change' }).click();

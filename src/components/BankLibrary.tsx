@@ -363,10 +363,6 @@ export function Receipts({ onTransaction }: { onTransaction: (id: string) => voi
       : null;
   return (
     <>
-      <div className="plain-note">
-        <Paperclip size={20} />
-        Receipts uploaded in Up. Download links are temporary and open directly from the file host.
-      </div>
       {error && (
         <p className="form-error" role="alert">
           {error}

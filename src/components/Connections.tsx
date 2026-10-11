@@ -144,30 +144,6 @@ export function Connections() {
   }
   return (
     <>
-      <div className="connection-intro">
-        <div>
-          <span className="mini-label">
-            <LinkIcon size={18} />
-            Connect your own tools
-          </span>
-          <h2>Webhooks</h2>
-          <p>
-            Manage Up’s webhook subscriptions and inspect delivery logs. No UpDeck server sits in
-            the middle.
-          </p>
-        </div>
-        <Button
-          className="primary-button"
-          disabled={busy || hooks.length >= 10}
-          onClick={() => {
-            setError('');
-            setCreateOpen(true);
-          }}
-        >
-          <Plus size={17} />
-          New webhook
-        </Button>
-      </div>
       <div className="health-panel panel">
         <span className="icon-circle green">
           <Lightning size={23} />
@@ -205,10 +181,23 @@ export function Connections() {
       <div className="section-heading">
         <h2>Your webhooks</h2>
         <span className="muted">{hooks.length} loaded · Up allows 10</span>
-        <Button variant="ghost" disabled={busy} onClick={() => void task(() => list())}>
-          <ArrowsClockwise size={16} />
-          Refresh
-        </Button>
+        <div className="tile-actions">
+          <Button variant="ghost" disabled={busy} onClick={() => void task(() => list())}>
+            <ArrowsClockwise size={16} />
+            Refresh
+          </Button>
+          <Button
+            className="primary-button"
+            disabled={busy || hooks.length >= 10}
+            onClick={() => {
+              setError('');
+              setCreateOpen(true);
+            }}
+          >
+            <Plus size={17} />
+            New webhook
+          </Button>
+        </div>
       </div>
       <div className="webhook-list">
         {hooks.map((hook) => (

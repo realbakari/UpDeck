@@ -1,89 +1,195 @@
+/* UpDeck tokens. The one place to retune.
+
+   UpDeck is a light, paper-coloured dashboard with one olive-green accent, DM Sans for words and
+   Fraunces for the big figures. Dark mode redefines the same roles.
+
+   Rules
+   - The accent is for the primary action, the chosen thing, progress and focus. It is never a page,
+     card, section or toast background. Everything else is paper, white and ink.
+   - Money has its own hues and they are status, not the accent: outgoing amounts are --danger,
+     incoming amounts are --success-text. The accent is green too, but the two are separate roles,
+     so either can be retuned on its own.
+   - Status has three hues, success, warn and danger, each with a mark, a tint, a line and a text step.
+     There is no info hue. Blue appears only as a chart series.
+   - Rules read roles, never hex, and never a dark-mode override of their own. The dark block below is
+     the only place a colour changes with the theme.
+   - No gradients. The spending chart's gridline is a repeating-linear-gradient, but it draws a ruled
+     line, not a fade. Shadows are the ink at low alpha and appear on overlays, toasts and the pressed
+     period control only.
+   - Every number is tabular: table cells, times, amounts and totals, so columns line up as they change.
+   - Fonts are bundled with the extension and never fetched. Fraunces is for display figures and
+     headings only, never for controls or body copy.
+   - Motion is short, eased out and never decorative. Reduced motion zeroes it, except the spinner,
+     which is the only sign that work is running.
+
+   Format
+   - One declaration per line, --name: value; then a comment of the form job | used by.
+   - A line that starts with == opens a token group. */
+
 :root {
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-sans);
   font-synthesis: none;
   font-size: 14px;
   color-scheme: light;
-  --page: #f6f6f3;
-  --surface: #fff;
-  --tint-1: #f1f2ee;
-  --tint-2: #e5f0de;
-  --warm-1: #fdf5e1;
-  --warm-2: #f8ebcc;
-  --cool-1: #f1f2ee;
-  --cool-2: #e9ebe6;
-  --peach-1: #fdf0ec;
-  --peach-2: #fae3dc;
-  --lime: #d4f09a;
-  --accent: #2e6b3c;
-  --accent-strong: #22532d;
-  --on-accent: #fff;
-  --ink: #1c201d;
-  --accent-ink: #285f34;
-  --text-2: #434944;
-  --muted: #5f655f;
-  --warm-ink: #6f5212;
-  --gold: #b07d0a;
-  --cool-ink: #4f5965;
-  --danger: #a8402a;
-  --line: #e4e5df;
-  --line-strong: #9ec790;
-  --line-warm: #efdcab;
-  --line-cool: #e4e5df;
-  --line-peach: #f2cdc2;
-  --olive: var(--accent);
+  color: var(--fg);
+  background: var(--page);
+
+  /* == Surfaces == */
+  --page: #f6f6f3; /* the page, warm paper | app background, sidebar */
+  --surface: #fff; /* a card or a row | card, header, table row, pill */
+  --surface-2: #f1f2ee; /* a control at rest, a well, a row on hover | period control, merchant icon, banner, track */
+  --raised: #fff; /* a surface that floats above the page | dialog */
+  --field: #fff; /* the fill of a text field | input, search field, select, refresh button */
+
+  /* == Text == */
+  --fg: #1c201d; /* primary text | headings, body, amounts */
+  --fg-2: #434944; /* secondary text | labels, the selected period, notes */
+  --fg-3: #5f655f; /* supporting text and icons | captions, nav at rest, hints, footer */
+  --fg-inverse: #fff; /* text on the solid ink fill | toast, chart tooltip */
+  --on-accent: #fff; /* text and icons on the accent | primary button */
+
+  /* == Lines == */
+  --line: #e4e5df; /* a hairline between things | card edge, divider, table rule, field edge, chart gridline */
+
+  /* == Solid ink == */
+  --ink: #1c201d; /* the ink fill: the second solid beside the accent | toast, chart tooltip */
+
+  /* == Accent: olive green == */
+  --accent: #2e6b3c; /* the mark: a primary action, the current thing, progress | primary button, nav dot, live dot, today's bar, Saver progress, checkbox, brand mark */
+  --accent-hover: #22532d; /* the mark on hover | primary button */
+  --accent-wash: #e5f0de; /* a soft highlight | active nav link, hovered nav link, tag chip, count tag, intro panel */
+  --accent-text: #285f34; /* text in the accent, the chosen thing | active nav label, hovered link, chip label, select, empty state title */
+  --accent-line: #9ec790; /* an outline in the accent | the completed Saver card */
+  --ring: var(--accent); /* the focus ring | every focus-visible state */
+
+  /* == Status: success, warn, danger == */
+  --success-text: #285f34; /* a good number or change | incoming amount, pay cycle ahead, spending down, target reached, success note */
+  --success-tint: #e5f0de; /* success wash | success note */
+  --warn: #b07d0a; /* warning mark | sample-data dot, Round-Up and Saver intro icons */
+  --warn-tint: #fdf5e1; /* warning wash | pending badge, token panel, Saver intro, Round-Up chip, insight callout, status tag */
+  --warn-line: #efdcab; /* a hairline on the warning wash | the same panels and chips, sample-data pill */
+  --warn-text: #6f5212; /* warning text | the same panels and chips, pay cycle behind, sample-data pill */
+  --danger: #a8402a; /* error mark and text | outgoing amount, spending up, error banner, form error, negative safe-to-spend */
+  --danger-tint: #fdf0ec; /* error wash | error banner, form error, danger pill */
+  --danger-line: #f2cdc2; /* a hairline on the error wash | error banner */
+
+  /* == Data: the chart series, in order == */
+  --data-1: #2f8f4e; /* first series | category 1, hovered bar, 2Up split, brand mark */
+  --data-2: #e0a526; /* second series | category 2 */
+  --data-3: #4a78c9; /* third series | category 3 */
+  --data-4: #d6604d; /* fourth series | category 4 */
+  --data-rest: #cdd0c9; /* everything after the fourth | the rest of the balance bar */
+  --chart-bar: #c8e2bb; /* a spending bar at rest | chart bar, legend dot, brand mark */
+
+  /* == Elevation: the ink at low alpha == */
+  --shadow-ink: 28 32 29; /* the shadow channel, an RGB triplet | every shadow */
+  --shadow-card: 0 1px 3px rgb(var(--shadow-ink) / 0.06); /* the pressed period control | period control */
+  --shadow-menu: 0 8px 30px rgb(var(--shadow-ink) / 0.12); /* a toast | toast */
+  --shadow-overlay:
+    0 15px 65px rgb(var(--shadow-ink) / 0.14), 0 0 0 1px var(--line); /* a dialog | dialog */
+
+  /* == Type == */
+  --font-sans: 'DM Sans', sans-serif; /* every word | all text */
+  --font-display:
+    'Fraunces Variable', Georgia, serif; /* the big figures and page headings | total balance, safe to spend, page heading, dialog title */
+  --font-mono: ui-monospace, Menlo, Consolas, monospace; /* code only | webhook delivery log */
+
+  /* == Motion: short, ease-out, never decorative == */
+  --dur-instant: 80ms; /* hover and press colour | every control */
+  --dur-slow: 300ms; /* a bar growing | Saver progress */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* the house curve | all transitions */
+
+  /* == Focus == */
+  --line-focus: 2px; /* the ring weight | every focus-visible state */
+  --focus-offset: 4px; /* the gap between a control and its ring | every focus-visible state */
+
+  /* == Kumo: its components read these so they follow the same roles == */
   --kumo-color-brand: var(--accent);
   --color-kumo-brand: var(--accent);
-  --color-kumo-ring: var(--accent);
+  --color-kumo-ring: var(--ring);
   --color-kumo-base: var(--surface);
-  --color-kumo-contrast: var(--ink);
-  color: var(--ink);
-  background: var(--page);
-  --data-1: #2f8f4e;
-  --data-2: #e0a526;
-  --data-3: #4a78c9;
-  --data-4: #d6604d;
-  --data-rest: #cdd0c9;
-  --bar: #c8e2bb;
+  --color-kumo-contrast: var(--fg);
 }
+
+/* Dark mode redefines the roles. The accent lightens so it reads on a near-black page, and the ink
+   fill flips to light so a toast still sits in front. */
 :root[data-mode='dark'] {
   color-scheme: dark;
   --page: #0e100e;
   --surface: #161916;
-  --tint-1: #1c1f1c;
-  --tint-2: #1c2a1d;
-  --warm-1: #271f0f;
-  --warm-2: #31270f;
-  --cool-1: #1c1f1c;
-  --cool-2: #232723;
-  --peach-1: #2a1915;
-  --peach-2: #36201b;
-  --lime: #3a5a1c;
-  --accent: #7fcf8c;
-  --accent-strong: #9edca8;
+  --surface-2: #1c1f1c;
+  --raised: #161916;
+  --field: #161916;
+
+  --fg: #eceeea;
+  --fg-2: #c8ccc6;
+  --fg-3: #9ba19a;
+  --fg-inverse: #0e100e;
   --on-accent: #0b1a0e;
-  --ink: #eceeea;
-  --accent-ink: #97d9a2;
-  --text-2: #c8ccc6;
-  --muted: #9ba19a;
-  --warm-ink: #f0cd78;
-  --gold: #f2bf47;
-  --cool-ink: #b4bfcc;
-  --danger: #f39a85;
+
   --line: #282c28;
-  --line-strong: #3d6a43;
-  --line-warm: #4a3b18;
-  --line-cool: #282c28;
-  --line-peach: #4d2b24;
+
+  --ink: #eceeea;
+
+  --accent: #7fcf8c;
+  --accent-hover: #9edca8;
+  --accent-wash: #1c2a1d;
+  --accent-text: #97d9a2;
+  --accent-line: #3d6a43;
+
+  --success-text: #97d9a2;
+  --success-tint: #1c2a1d;
+  --warn: #f2bf47;
+  --warn-tint: #271f0f;
+  --warn-line: #4a3b18;
+  --warn-text: #f0cd78;
+  --danger: #f39a85;
+  --danger-tint: #2a1915;
+  --danger-line: #4d2b24;
+
   --data-1: #6fcf8a;
   --data-2: #f2c14e;
   --data-3: #7fa6ee;
   --data-4: #f08a76;
   --data-rest: #3b403b;
-  --bar: #2e4a33;
+  --chart-bar: #2e4a33;
+
+  --shadow-ink: 0 0 0;
+  --shadow-card: 0 1px 3px rgb(var(--shadow-ink) / 0.4);
+  --shadow-menu: 0 8px 30px rgb(var(--shadow-ink) / 0.5), 0 0 0 1px var(--line);
+  --shadow-overlay: 0 15px 65px rgb(var(--shadow-ink) / 0.6), 0 0 0 1px var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-instant: 0ms;
+    --dur-slow: 0ms;
+  }
 }
 
 * {
   box-sizing: border-box;
+}
+/* Numbers line up as they change. */
+td,
+th,
+time,
+data,
+output,
+.total-balance,
+.safe-amount,
+.saver-amount,
+.spending-value,
+.transaction-amount,
+.receipt-amount,
+.recurring-amount,
+.changed-total,
+.balance-summary {
+  font-variant-numeric: lining-nums tabular-nums;
+}
+::selection {
+  background: var(--accent-wash);
+  color: var(--fg);
 }
 body {
   margin: 0;
@@ -99,6 +205,10 @@ a,
 input,
 select {
   -webkit-tap-highlight-color: transparent;
+  /* Every control declares its colour transition, so none cuts while a neighbour tweens. */
+  transition-property: color, background-color, border-color, box-shadow, opacity;
+  transition-duration: var(--dur-instant);
+  transition-timing-function: var(--ease-out);
 }
 button {
   cursor: pointer;
@@ -110,8 +220,8 @@ button:focus-visible,
 a:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
+  outline: var(--line-focus) solid var(--ring);
+  outline-offset: var(--focus-offset);
 }
 a {
   color: inherit;
@@ -178,10 +288,10 @@ svg {
 }
 .brand-mark span:nth-child(3) {
   height: 18px;
-  background: var(--bar);
+  background: var(--chart-bar);
 }
 .nav-caption {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   margin: 36px 13px 12px;
 }
@@ -196,17 +306,17 @@ svg {
   border-radius: 7px;
   padding: 0 13px;
   text-align: left;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-bottom: 5px;
   font-weight: 500;
   font-size: 14px;
 }
 .nav-link:hover {
-  background: var(--tint-2);
+  background: var(--accent-wash);
 }
 .nav-link.active {
-  background: var(--tint-2);
-  color: var(--accent-ink);
+  background: var(--accent-wash);
+  color: var(--accent-text);
 }
 .nav-dot {
   margin-left: auto;
@@ -230,7 +340,7 @@ svg {
   justify-content: center;
   gap: 6px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-top: 18px;
 }
 .main-shell {
@@ -254,7 +364,7 @@ svg {
   font-size: 14px;
 }
 .breadcrumb > span {
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .breadcrumb strong {
   font-weight: 500;
@@ -265,13 +375,13 @@ svg {
   gap: 12px;
 }
 .top-actions button {
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .status-pill {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   padding: 6px 10px;
   border: 1px solid var(--line);
@@ -285,12 +395,12 @@ svg {
   border-radius: 50%;
 }
 .status-pill.demo {
-  color: var(--warm-ink);
+  color: var(--warn-text);
   background: var(--surface);
-  border-color: var(--line-warm);
+  border-color: var(--warn-line);
 }
 .status-pill.demo > span {
-  background: var(--gold);
+  background: var(--warn);
 }
 .expand-button {
   display: none !important;
@@ -306,11 +416,11 @@ main {
   justify-content: space-between;
   gap: 12px;
   border: 1px solid var(--line);
-  background: var(--tint-1);
+  background: var(--surface-2);
   border-radius: 7px;
   padding: 11px 14px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-bottom: 29px;
 }
 .demo-banner > span {
@@ -324,7 +434,7 @@ main {
   align-items: center;
   border: 0;
   background: none;
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   font-weight: 600;
   white-space: nowrap;
@@ -338,26 +448,26 @@ main {
 }
 .eyebrow {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-bottom: 9px;
 }
 .page-heading h1 {
-  font-family: 'Fraunces Variable', Georgia, serif;
+  font-family: var(--font-display);
   font-size: 33px;
   font-weight: 450;
   line-height: 1.25;
 }
 .page-heading p {
-  color: var(--muted);
+  color: var(--fg-3);
   margin-top: 9px;
   font-size: 14px;
 }
 .refresh-button {
   font-size: 14px !important;
-  background: var(--surface) !important;
+  background: var(--field) !important;
   height: 34px !important;
   border-radius: 6px !important;
-  color: var(--text-2) !important;
+  color: var(--fg-2) !important;
   font-weight: 400 !important;
   box-shadow: 0 0 0 1px var(--line) !important;
 }
@@ -366,10 +476,10 @@ main {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .total-balance {
-  font-family: 'Fraunces Variable', Georgia, serif;
+  font-family: var(--font-display);
   font-variant-numeric: lining-nums tabular-nums;
   font-size: 45px;
   font-weight: 500;
@@ -385,15 +495,15 @@ main {
   width: 31px;
 }
 .peach {
-  background: var(--peach-2);
+  background: var(--danger-tint);
   color: var(--danger);
 }
 .green {
-  background: var(--tint-1);
-  color: var(--muted);
+  background: var(--surface-2);
+  color: var(--fg-3);
 }
 .muted {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   display: inline-flex;
   align-items: center;
@@ -410,6 +520,9 @@ main {
   font-size: 17px;
   font-weight: 500;
 }
+.section-heading .tile-actions {
+  margin-top: 0;
+}
 .heading-with-tag {
   display: flex;
   align-items: center;
@@ -417,14 +530,14 @@ main {
 }
 .count-tag {
   font-size: 14px;
-  color: var(--muted);
-  background: var(--tint-2);
+  color: var(--fg-3);
+  background: var(--accent-wash);
   padding: 3px 7px;
   border-radius: 4px;
 }
 .period-control {
   display: flex;
-  background: var(--tint-1);
+  background: var(--surface-2);
   border-radius: 6px;
   padding: 3px;
   gap: 2px;
@@ -435,15 +548,15 @@ main {
   background: transparent;
   border: 0;
   border-radius: 4px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .period-control button[aria-pressed='true'] {
   background: var(--surface);
-  color: var(--text-2);
-  box-shadow: 0 1px 3px #1c201d0f;
+  color: var(--fg-2);
+  box-shadow: var(--shadow-card);
 }
 .period-control button:hover {
-  color: var(--ink);
+  color: var(--fg);
 }
 .insights-grid {
   display: grid;
@@ -470,7 +583,7 @@ main {
   font-weight: 500;
 }
 .panel-heading > svg {
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .spending-value {
   font-size: 27px;
@@ -482,11 +595,11 @@ main {
   display: flex;
   align-items: center;
   gap: 4px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   border-radius: 5px;
   padding: 5px 8px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .chart {
   margin-top: 19px;
@@ -495,7 +608,7 @@ main {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .chart-top > span:nth-child(2) {
   font-size: 14px;
@@ -510,8 +623,8 @@ main {
     to top,
     transparent 0,
     transparent 32px,
-    var(--tint-2) 32px,
-    var(--tint-2) 33px
+    var(--line) 32px,
+    var(--line) 33px
   );
   border-bottom: 1px solid var(--line);
   margin-top: 11px;
@@ -526,7 +639,7 @@ main {
 .chart-bar {
   width: 100%;
   max-width: 27px;
-  background: var(--bar);
+  background: var(--chart-bar);
   border-radius: 4px 4px 0 0;
   position: relative;
 }
@@ -542,8 +655,8 @@ main {
   bottom: calc(100% + 5px);
   left: 50%;
   transform: translateX(-50%);
-  background: var(--accent-strong);
-  color: var(--on-accent);
+  background: var(--ink);
+  color: var(--fg-inverse);
   border-radius: 4px;
   padding: 4px 6px;
   font-size: 14px;
@@ -559,7 +672,7 @@ main {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-top: 9px;
 }
 .chart-footer {
@@ -567,14 +680,14 @@ main {
   justify-content: space-between;
   gap: 8px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-top: 20px;
 }
 .legend-dot {
   width: 6px;
   height: 6px;
   display: inline-block;
-  background: var(--bar);
+  background: var(--chart-bar);
   border-radius: 2px;
 }
 .categories {
@@ -593,7 +706,7 @@ main {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .category strong {
   font-size: 14px;
@@ -608,7 +721,7 @@ main {
 }
 .category-track {
   height: 4px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   border-radius: 3px;
   margin-top: 8px;
 }
@@ -634,13 +747,13 @@ main {
   gap: 7px;
   font-size: 14px;
   font-weight: 500;
-  color: var(--muted);
+  color: var(--fg-3);
   background: none;
   border: 0;
   padding: 0;
 }
 .text-link:hover {
-  color: var(--accent-ink);
+  color: var(--accent-text);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
@@ -663,8 +776,8 @@ main {
   margin-bottom: 13px;
 }
 .saver-icon {
-  background: var(--tint-1);
-  color: var(--muted);
+  background: var(--surface-2);
+  color: var(--fg-3);
   border-radius: 10px;
   width: 42px;
   height: 42px;
@@ -674,13 +787,13 @@ main {
 .saver-top button {
   border: 0;
   background: transparent;
-  color: var(--muted);
+  color: var(--fg-3);
   padding: 5px;
   border-radius: 4px;
 }
 .saver-top button:hover {
-  background: var(--tint-1);
-  color: var(--accent-ink);
+  background: var(--surface-2);
+  color: var(--accent-text);
 }
 .saver-card h3 {
   font-size: 14px;
@@ -701,7 +814,7 @@ main {
 }
 .saver-amount span {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .saver-bottom {
   display: flex;
@@ -710,7 +823,7 @@ main {
   gap: 5px;
   margin-top: 9px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   min-height: 16px;
 }
 .saver-bottom .text-link {
@@ -721,7 +834,7 @@ main {
   display: block;
   margin-top: 10px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .transactions-panel {
   overflow: hidden;
@@ -741,13 +854,13 @@ main {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  background: var(--tint-1);
-  color: var(--text-2);
+  background: var(--surface-2);
+  color: var(--fg-2);
   border-radius: 10px;
 }
 .merchant-icon.income {
-  background: var(--tint-1);
-  color: var(--muted);
+  background: var(--surface-2);
+  color: var(--fg-3);
 }
 .transaction-merchant {
   flex: 1;
@@ -762,7 +875,7 @@ main {
   overflow-wrap: anywhere;
 }
 .transaction-merchant > span {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   display: flex;
   gap: 8px;
@@ -770,14 +883,14 @@ main {
 }
 .transaction-merchant em {
   font-style: normal;
-  background: var(--warm-1);
-  color: var(--warm-ink);
+  background: var(--warn-tint);
+  color: var(--warn-text);
   border-radius: 3px;
   padding: 1px 4px;
   font-size: 14px;
 }
 .transaction-date {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   margin-right: 25px;
 }
@@ -794,7 +907,7 @@ main {
 }
 .receipt-amount.positive,
 .transaction-amount.positive {
-  color: var(--accent-ink);
+  color: var(--success-text);
 }
 footer {
   display: flex;
@@ -802,7 +915,7 @@ footer {
   justify-content: space-between;
   gap: 16px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   border-top: 1px solid var(--line);
   padding: 20px 0;
   margin-top: 31px;
@@ -821,7 +934,7 @@ footer {
   font-weight: 500 !important;
 }
 .primary-button:hover {
-  background: var(--accent-strong) !important;
+  background: var(--accent-hover) !important;
 }
 .primary-button:disabled {
   opacity: 0.6;
@@ -835,8 +948,8 @@ footer {
   justify-content: space-between;
   gap: 15px;
   align-items: center;
-  background: var(--peach-1);
-  border: 1px solid var(--line-peach);
+  background: var(--danger-tint);
+  border: 1px solid var(--danger-line);
   border-radius: 8px;
   color: var(--danger);
   padding: 12px 16px;
@@ -858,19 +971,19 @@ footer {
   display: flex;
   align-items: center;
   gap: 9px;
-  background: var(--accent-strong);
-  color: var(--on-accent);
+  background: var(--ink);
+  color: var(--fg-inverse);
   border-radius: 9px;
   padding: 14px 20px;
   font-size: 14px;
-  box-shadow: 0 8px 30px #1c201d1f;
+  box-shadow: var(--shadow-menu);
   z-index: 5;
   max-width: 90vw;
 }
 .empty-state {
   text-align: center;
   padding: 40px 20px;
-  color: var(--muted);
+  color: var(--fg-3);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -878,13 +991,13 @@ footer {
 }
 .empty-state h3 {
   font-size: 16px;
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .empty-state p {
   font-size: 14px;
 }
 .empty-copy {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   line-height: 1.7;
   margin: 30px 0;
@@ -894,7 +1007,7 @@ footer {
   align-items: center;
   gap: 9px;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   line-height: 1.7;
   margin: 20px 0;
 }
@@ -905,7 +1018,7 @@ footer {
 .flow-summary {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: var(--tint-1);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 25px 30px;
@@ -919,7 +1032,7 @@ footer {
   display: flex;
   align-items: center;
   gap: 7px;
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
 }
 .flow-summary h2 {
@@ -944,13 +1057,13 @@ footer {
   position: absolute;
   left: 12px;
   top: 11px;
-  color: var(--muted);
+  color: var(--fg-3);
   z-index: 1;
 }
 .search-field input {
   width: 100%;
   height: 40px !important;
-  background: var(--surface) !important;
+  background: var(--field) !important;
   box-shadow: 0 0 0 1px var(--line) !important;
   border-radius: 6px !important;
   padding-left: 37px !important;
@@ -962,12 +1075,12 @@ footer {
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 0 10px;
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
 }
 .results-caption {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   margin-bottom: 12px;
 }
 .load-more {
@@ -988,7 +1101,7 @@ footer {
   margin-bottom: 20px;
 }
 .settings-card h2 {
-  font-family: 'Fraunces Variable', serif;
+  font-family: var(--font-display);
   font-weight: 450;
   font-size: 25px;
   margin-bottom: 15px;
@@ -999,7 +1112,7 @@ footer {
   font-weight: 500;
 }
 .settings-card p {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
   line-height: 1.8;
   margin-bottom: 17px;
@@ -1016,11 +1129,7 @@ footer {
   gap: 9px;
   align-items: center;
   font-size: 14px;
-  color: var(--muted);
-}
-.privacy-list svg {
-  color: var(--muted);
-  width: 17px;
+  color: var(--fg-3);
 }
 .settings-stack {
   display: flex;
@@ -1037,27 +1146,25 @@ footer {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   padding: 6px;
 }
 .brand-small {
   font-weight: 600;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .deck-dialog {
   padding: 28px !important;
   border-radius: 16px !important;
-  background: var(--page) !important;
-  color: var(--ink) !important;
+  background: var(--raised) !important;
+  color: var(--fg) !important;
   max-width: calc(100vw - 28px) !important;
   max-height: calc(100dvh - 28px) !important;
   overflow-y: auto !important;
-  box-shadow:
-    0 15px 65px #1c201d24,
-    0 0 0 1px var(--line) !important;
+  box-shadow: var(--shadow-overlay) !important;
 }
 .deck-dialog h2 {
-  font-family: 'Fraunces Variable', serif;
+  font-family: var(--font-display);
   font-size: 25px !important;
   font-weight: 450 !important;
   line-height: 1.3 !important;
@@ -1066,7 +1173,7 @@ footer {
 .deck-dialog [id$='description'],
 .deck-dialog p {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   line-height: 1.7;
 }
 .dialog-title-row {
@@ -1087,13 +1194,13 @@ footer {
 .dialog-form input {
   width: 100%;
   font-size: 14px !important;
-  background: var(--surface) !important;
+  background: var(--field) !important;
   height: 40px !important;
   box-shadow: 0 0 0 1px var(--line) !important;
 }
 .dialog-form label {
   font-size: 14px !important;
-  color: var(--text-2) !important;
+  color: var(--fg-2) !important;
 }
 .dialog-form [data-slot='field-description'] {
   font-size: 14px;
@@ -1115,25 +1222,25 @@ footer {
   align-items: center;
   justify-content: space-between;
   font-size: 14px;
-  color: var(--muted);
-  background: var(--tint-1);
+  color: var(--fg-3);
+  background: var(--surface-2);
   padding: 11px;
   border-radius: 6px;
 }
 .form-error {
   color: var(--danger) !important;
-  background: var(--peach-2);
+  background: var(--danger-tint);
   padding: 10px;
   border-radius: 6px;
   font-size: 14px !important;
 }
 .form-footnote {
   font-size: 14px !important;
-  color: var(--muted) !important;
+  color: var(--fg-3) !important;
 }
 .preview-explainer {
   padding: 22px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   border-radius: 10px;
   margin-top: 22px;
 }
@@ -1273,7 +1380,7 @@ footer {
     border-right: 0;
     display: block;
     padding: 19px 20px 10px;
-    background: var(--tint-1);
+    background: var(--surface-2);
   }
   .app-shell {
     display: block;
@@ -1551,7 +1658,7 @@ footer {
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  *,
+  *:not(.spin),
   *::before,
   *::after {
     animation: none !important;
@@ -1701,7 +1808,7 @@ main {
   color: inherit;
 }
 .transaction-button:hover {
-  background: var(--tint-1);
+  background: var(--surface-2);
 }
 .transaction-button:focus-visible {
   outline-offset: -3px;
@@ -1716,7 +1823,7 @@ main {
   gap: 14px;
   flex-wrap: wrap;
   padding: 20px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: 10px;
   margin: 20px 0;
@@ -1727,7 +1834,7 @@ main {
   flex-direction: column;
   gap: 7px;
   font-size: 14px;
-  color: var(--text-2);
+  color: var(--fg-2);
 }
 .bank-filters > div {
   max-width: 180px;
@@ -1746,8 +1853,8 @@ select {
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 8px 10px;
-  color: var(--accent-ink);
-  background: var(--surface);
+  color: var(--accent-text);
+  background: var(--field);
   font-size: 14px;
   max-width: 100%;
 }
@@ -1771,7 +1878,7 @@ select {
 }
 .account-tile p {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
   line-height: 1.7;
 }
 .tile-actions {
@@ -1790,18 +1897,18 @@ select {
   margin: 25px 0;
 }
 .detail-grid dt {
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .detail-grid dd {
   margin: 0;
   overflow-wrap: anywhere;
-  color: var(--ink);
+  color: var(--fg);
 }
 .receipt-dialog {
   width: 580px !important;
 }
 .receipt-amount {
-  font-family: 'DM Sans', sans-serif !important;
+  font-family: var(--font-sans) !important;
   font-size: 37px !important;
   margin-top: 24px !important;
 }
@@ -1844,8 +1951,8 @@ select {
   align-items: center;
   gap: 8px;
   font-size: 14px;
-  background: var(--tint-2);
-  color: var(--accent-ink);
+  background: var(--accent-wash);
+  color: var(--accent-text);
   border: 1px solid var(--line);
   padding: 7px 11px;
   border-radius: 6px;
@@ -1860,8 +1967,8 @@ select {
 .success-note {
   padding: 12px 15px;
   border-radius: 8px;
-  background: var(--tint-2);
-  color: var(--accent-ink);
+  background: var(--success-tint);
+  color: var(--success-text);
   font-size: 14px;
   line-height: 1.6;
   margin: 15px 0;
@@ -1892,40 +1999,17 @@ select {
   gap: 12px;
   border: 0;
   border-radius: 5px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   font-size: 14px;
   text-align: left;
-  color: var(--accent-ink);
+  color: var(--accent-text);
 }
 .category-library button:hover {
-  background: var(--tint-2);
+  background: var(--accent-wash);
 }
 .category-library button > span:last-child {
   font-size: 14px;
-  color: var(--muted);
-}
-.connection-intro {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  background: var(--tint-2);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  padding: 30px;
-  margin-bottom: 23px;
-}
-.connection-intro h2 {
-  font-family: 'Fraunces Variable', serif;
-  font-size: 29px;
-  font-weight: 450;
-  margin: 15px 0 10px;
-}
-.connection-intro p {
-  font-size: 14px;
-  color: var(--muted);
-  max-width: 650px;
-  line-height: 1.7;
+  color: var(--fg-3);
 }
 .health-panel {
   display: flex;
@@ -1942,7 +2026,7 @@ select {
 }
 .health-panel p {
   font-size: 14px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .webhook-list {
   display: grid;
@@ -1970,7 +2054,7 @@ select {
   overflow-wrap: anywhere;
   line-height: 1.6;
   font-size: 14px;
-  color: var(--text-2);
+  color: var(--fg-2);
   margin-bottom: 8px;
 }
 .consent-check {
@@ -1978,7 +2062,7 @@ select {
   gap: 10px;
   align-items: flex-start;
   font-size: 14px;
-  color: var(--accent-ink);
+  color: var(--accent-text);
   line-height: 1.5;
 }
 .consent-check input {
@@ -1990,8 +2074,8 @@ select {
   box-shadow: none !important;
 }
 .secret-panel {
-  background: var(--warm-1);
-  border: 1px solid var(--line-warm);
+  background: var(--warn-tint);
+  border: 1px solid var(--warn-line);
   border-radius: 10px;
   padding: 20px;
   margin: 20px 0;
@@ -2000,12 +2084,12 @@ select {
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--warm-ink);
+  color: var(--warn-text);
   font-size: 17px;
 }
 .secret-panel p {
   margin: 10px 0;
-  color: var(--warm-ink);
+  color: var(--warn-text);
 }
 .secret-panel input {
   width: 100%;
@@ -2028,9 +2112,9 @@ select {
 }
 .delivery-log pre {
   white-space: pre-wrap;
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 12px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   padding: 12px;
   border-radius: 6px;
   max-height: 250px;
@@ -2185,17 +2269,17 @@ select {
   padding: 16px 20px;
   margin-bottom: 20px;
   border-radius: 11px;
-  background: var(--warm-1);
-  border: 1px solid var(--line-warm);
-  color: var(--warm-ink);
+  background: var(--warn-tint);
+  border: 1px solid var(--warn-line);
+  color: var(--warn-text);
   font-size: 14px;
 }
 .saver-intro svg {
-  color: var(--gold);
+  color: var(--warn);
   flex-shrink: 0;
 }
 .saver-intro strong {
-  color: var(--warm-ink);
+  color: var(--warn-text);
 }
 
 /* Savers: emoji, amount and a progress bar toward the target. */
@@ -2203,7 +2287,7 @@ select {
   height: 6px;
   margin-top: 16px;
   border-radius: 3px;
-  background: var(--tint-1);
+  background: var(--surface-2);
   overflow: hidden;
 }
 .saver-progress span {
@@ -2211,18 +2295,18 @@ select {
   height: 100%;
   border-radius: 3px;
   background: var(--accent);
-  transition: width 0.3s ease-out;
+  transition: width var(--dur-slow) var(--ease-out);
 }
 .saver-icon {
   font-size: 22px;
   line-height: 1;
 }
 .saver-card.complete {
-  border-color: var(--line-strong);
+  border-color: var(--accent-line);
 }
 .saver-card.complete .saver-bottom {
   font-weight: 600;
-  color: var(--accent-ink);
+  color: var(--success-text);
 }
 
 /* Total balance: one card, one bar, one column per account. */
@@ -2246,11 +2330,11 @@ select {
   display: flex;
   flex-wrap: wrap;
   gap: 4px 18px;
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 14px;
 }
 .balance-summary strong {
-  color: var(--ink);
+  color: var(--fg);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
@@ -2260,13 +2344,13 @@ select {
   gap: 6px;
   padding: 5px 11px;
   border-radius: 999px;
-  background: var(--warm-1);
-  border: 1px solid var(--line-warm);
-  color: var(--warm-ink);
+  background: var(--warn-tint);
+  border: 1px solid var(--warn-line);
+  color: var(--warn-text);
   font-size: 13px;
 }
 .roundup-chip svg {
-  color: var(--gold);
+  color: var(--warn);
 }
 .roundup-chip strong {
   font-variant-numeric: tabular-nums;
@@ -2303,7 +2387,7 @@ select {
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  color: var(--text-2);
+  color: var(--fg-2);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -2315,7 +2399,7 @@ select {
 }
 .account-split small {
   font-size: 12px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .account-split i {
   flex-shrink: 0;
@@ -2363,7 +2447,7 @@ select {
   font-size: 22px;
 }
 .lock-card h1 {
-  font-family: 'Fraunces Variable', Georgia, serif;
+  font-family: var(--font-display);
   font-size: 30px;
   font-weight: 500;
   line-height: 1.15;
@@ -2371,7 +2455,7 @@ select {
 .lock-lede {
   margin: 8px 0 22px;
   font-size: 15px;
-  color: var(--muted);
+  color: var(--fg-3);
   line-height: 1.5;
 }
 .lock-form {
@@ -2389,7 +2473,7 @@ select {
   margin-top: 22px;
   padding-top: 18px;
   border-top: 1px solid var(--line);
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -2398,7 +2482,7 @@ select {
   margin-top: 2px;
 }
 .lock-footer {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 13px;
   text-align: center;
 }
@@ -2422,7 +2506,7 @@ select {
   border-radius: 14px;
 }
 .transaction-hero h1 {
-  font-family: 'Fraunces Variable', Georgia, serif;
+  font-family: var(--font-display);
   font-size: 32px;
   font-weight: 500;
   line-height: 1.15;
@@ -2430,7 +2514,7 @@ select {
 }
 .transaction-hero p {
   margin-top: 4px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 
 /* Insights: payday, subscriptions, changes and reports. */
@@ -2456,7 +2540,7 @@ select {
   flex-wrap: wrap;
 }
 .safe-payday {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 13px;
 }
 .safe-main {
@@ -2465,14 +2549,14 @@ select {
   flex-wrap: wrap;
   gap: 6px 14px;
   margin: 12px 0 6px;
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .safe-main strong {
-  color: var(--ink);
+  color: var(--fg);
   font-variant-numeric: tabular-nums;
 }
 .safe-amount {
-  font-family: 'Fraunces Variable', Georgia, serif;
+  font-family: var(--font-display);
   font-size: 38px;
   font-weight: 500;
   line-height: 1.1;
@@ -2482,7 +2566,7 @@ select {
 }
 .safe-maths,
 .safe-empty {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 13px;
   line-height: 1.5;
 }
@@ -2498,10 +2582,10 @@ select {
   font-weight: 500;
 }
 .safe-pace.ahead {
-  color: var(--accent-ink);
+  color: var(--success-text);
 }
 .safe-pace.behind {
-  color: var(--warm-ink);
+  color: var(--warn-text);
 }
 .safe-card .text-link {
   margin-top: 12px;
@@ -2532,9 +2616,9 @@ select {
   margin-bottom: 12px;
   padding: 10px 14px;
   border-radius: 9px;
-  background: var(--warm-1);
-  border: 1px solid var(--line-warm);
-  color: var(--warm-ink);
+  background: var(--warn-tint);
+  border: 1px solid var(--warn-line);
+  color: var(--warn-text);
   font-size: 14px;
 }
 .recurring-list {
@@ -2560,7 +2644,7 @@ select {
 .recurring-name span,
 .recurring-amount span,
 .recurring-next {
-  color: var(--muted);
+  color: var(--fg-3);
   font-size: 13px;
 }
 .recurring-amount {
@@ -2569,9 +2653,9 @@ select {
 .status-tag {
   padding: 2px 8px;
   border-radius: 999px;
-  background: var(--warm-1);
-  border: 1px solid var(--line-warm);
-  color: var(--warm-ink);
+  background: var(--warn-tint);
+  border: 1px solid var(--warn-line);
+  color: var(--warn-text);
   white-space: nowrap;
 }
 .changed-panel,
@@ -2582,7 +2666,7 @@ select {
   gap: 14px;
 }
 .changed-total {
-  color: var(--muted);
+  color: var(--fg-3);
 }
 .changed-panel ul,
 .twoup-panel ul {
@@ -2605,7 +2689,7 @@ select {
   color: var(--danger);
 }
 .changed-panel li.down svg {
-  color: var(--accent-ink);
+  color: var(--success-text);
 }
 .twoup-panel .split-bar {
   margin: 0;
@@ -2645,7 +2729,7 @@ select {
   font-weight: 500;
 }
 .report-table thead th {
-  color: var(--muted);
+  color: var(--fg-3);
   font-weight: 500;
   font-size: 13px;
 }
